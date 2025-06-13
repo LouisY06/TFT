@@ -5,7 +5,9 @@ import time
 import pytesseract
 from PIL import Image
 
-def capture_fullscreen(save_dir="assets/screenshots"):
+
+#captures shop
+def capture_shop(save_dir="assets/screenshots"):
     os.makedirs(save_dir, exist_ok=True)
     shop_regions = [(515, 1220, 150, 30),
                     (730, 1220, 150, 30),
@@ -22,6 +24,23 @@ def capture_fullscreen(save_dir="assets/screenshots"):
         print(f"Screenshot saved: {path}")
 
     return path
+
+#return gold
+def capture_gold(save_dir="assets/screenshots"):
+    os.makedirs(save_dir, exist_ok=True)
+    path = os.path.join(save_dir, f"curr_gold.png")
+    screenshot = pyautogui.screenshot(region=(827, 972, 80, 30))
+    screenshot.save(path)
+    print(f"Screenshot saved {path}")
+
+    return path 
+
+def capture_level(save_dir="assets/screenshots"):
+
+    pass
+
+def capture_item(save_dir="assets/screenshots"):
+    pass
 
 def delete_screenshots(directory="assets/screenshots"):
     if not os.path.exists(directory):
