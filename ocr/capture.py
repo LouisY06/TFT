@@ -44,24 +44,35 @@ def delete_screenshots(directory="assets/screenshots"):
             count = count + 1
     print(f"Deleted {count} screenshot(s) from {directory}.")
 
+
 def extract_text(directory="assets/screenshots"):
     results = []
+
     for i in range(len(shop_regions)):
         image_path = os.path.join(directory, f"slot_{i+1}.png")
 
         if not os.path.exists(image_path):
-            print(f"missing file: {image_path}")
+            print(f"Missing file: {image_path}")
             results.append(None)
             continue
-        
+
         image = Image.open(image_path)
-        # Before OCR
-     
-        text = pytesseract.image_to_string(image)
+
+        image = image.resize((image.width * 3, image.height * 3),resample=Image.Resampling.LANCZOS)
+
+        image = image.convert("L")
+
+        # tesseract config: single-line mode, character whitelist
+        config = r'--psm 7 --oem 3 -c tessedit_char_whitelist=abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'
+
+        #Perform OCR
+        text = pytesseract.image_to_string(image, config=config)
+
+        # Clean up result
         cleaned = text.strip().replace("\n", " ")
         results.append(cleaned)
+
         print(f"Slot {i+1} OCR: {cleaned}")
 
-
+    print(f"\nAll OCR results: {results}")
     return results
-
