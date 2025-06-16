@@ -1,11 +1,6 @@
-from ocr.capture import *
-import ocr.temp 
-import time
+from ocr.detect_shop import wait_for_shop
+from ocr.shop_monitor import monitor_shop_loop
 
 if __name__ == "__main__":
-    test_ocr()
-
-    
-
-
-
+    if wait_for_shop():
+        monitor_shop_loop()
