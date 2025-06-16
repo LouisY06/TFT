@@ -1,0 +1,19 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyc
+
+# VSCode or IDE folders
+.vscode/
+.idea/
+
+# Virtual environments
+venv/
+
+# OS files
+.DS_Store
+
+# Images & screenshots
+assets
+ocr/assets/screenshots/
+photo/reroll_text.png
