@@ -22,7 +22,7 @@ SCREENSHOT_DIR = os.path.join(BASE_DIR, "assets", "screenshots")
 
 def capture_shop(save_dir=SCREENSHOT_DIR):
     os.makedirs(save_dir, exist_ok=True)
-    print("📸 Capturing shop in 3 seconds...")
+    print("Capturing shop in 3 seconds...")
     time.sleep(3)
 
     paths = []
