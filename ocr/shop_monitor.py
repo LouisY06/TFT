@@ -1,16 +1,11 @@
-from ocr.capture import capture_shop, extract_text_from_images
-from ocr.detect_shop import shop_still_visible, wait_for_shop
-from ocr.matching import *
 import time
+from ocr.capture import capture_shop, extract_text_from_images
+from ocr.detect_shop import shop_still_visible
+from ocr.matching import load_champ, match_champ
 
-# Load once at top-level
-champions = load_champ("data/champs_*.json")  # Replace with actual path if needed
-
-def monitor_shop_loop_once():
-    print("📡 Monitoring shop...")
-
+def monitor_shop_loop_once(champions):
     image_paths = capture_shop()
-    champ_names = extract_text_from_images(image_paths[:5])  # Shop slots only
+    champ_names = extract_text_from_images(image_paths[:5])
 
     matched = []
     for name in champ_names:
@@ -27,6 +22,6 @@ def monitor_shop_loop_once():
     print("🔍 Matched Champions:")
     for champ in matched:
         if "error" in champ:
-            print(f"❌ {champ['name']}: {champ['error']}")
+            print(f"{champ['name']}: {champ['error']}")
         else:
-            print(f"✅ {champ['name']} | Cost: {champ['cost']} | Traits: {', '.join(champ['traits'])}")
+            print(f"{champ['name']} | Cost: {champ['cost']} | Traits: {', '.join(champ['traits'])}")

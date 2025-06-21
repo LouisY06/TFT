@@ -4,7 +4,7 @@ import os
 def wait_for_shop(path="photo/reroll_text.png", confidence=0.8):
     full = os.path.abspath(path)
     print(f"Looking for {full}")
-    print("⏳ Waiting for shop...")
+    print("Waiting for shop...")
 
     while True:
         try:
