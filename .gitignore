@@ -16,4 +16,9 @@ venv/
 # Images & screenshots
 assets
 ocr/assets/screenshots/
-photo/reroll_text.png
+
+# HTML files
+*.html
+
+# JSON files
+*.json
