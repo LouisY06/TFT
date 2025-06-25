@@ -1,6 +1,7 @@
 import os
 import time
 import atexit
+import shutil
 from ocr.detect_shop import wait_for_shop, shop_still_visible
 from ocr.shop_monitor import monitor_shop_loop_once
 from ocr.matching import load_champ
@@ -13,12 +14,29 @@ TRAITS_PATH = os.path.join(DATA_DIR, "traits.json")
 def cleanup_files():
     if os.path.exists(CHAMPS_PATH):
         os.remove(CHAMPS_PATH)
-        print("🧹 Deleted:", CHAMPS_PATH)
+        print("Deleted:", CHAMPS_PATH)
     if os.path.exists(TRAITS_PATH):
         os.remove(TRAITS_PATH)
-        print("🧹 Deleted:", TRAITS_PATH)
+        print("Deleted:", TRAITS_PATH)
+
+def cleanup_pycache():
+    if '__file__' in globals():
+        base_dir = os.path.abspath(os.path.dirname(__file__))
+    else:
+        base_dir = os.path.abspath(os.getcwd())
+
+    for root, dirs, files in os.walk(base_dir):
+        for d in dirs:
+            if d == "__pycache__":
+                pycache_dir = os.path.join(root, d)
+                for filename in os.listdir(pycache_dir):
+                    file_path = os.path.join(pycache_dir, filename)
+                    if filename.endswith(".pyc") and os.path.isfile(file_path):
+                        os.remove(file_path)
+                        print("Deleted .pyc file:", file_path)
 
 atexit.register(cleanup_files)
+atexit.register(cleanup_pycache)
 
 def main():
     print("Starting TFT live monitor...")
@@ -37,6 +55,6 @@ def main():
             print("Shop detected, entering monitor loop...")
             while shop_still_visible():
                 monitor_shop_loop_once(champions)
-               
+
 if __name__ == "__main__":
     main()
