@@ -6,6 +6,8 @@ from ocr.matching import load_champ, match_champ
 def monitor_shop_loop_once(champions):
     image_paths = capture_shop()
     champ_names = extract_text_from_images(image_paths[:5])
+    gold = extract_text_from_images(image_paths[6])
+    level = extract_text_from_images(image_paths[7])
 
     matched = []
     for name in champ_names:
@@ -18,6 +20,10 @@ def monitor_shop_loop_once(champions):
             matched.append(champ)
         else:
             matched.append({"name": name, "error": "Not found"})
+
+    print(f"Current Gold: {gold}")
+    print(f"Current Level: {level}")
+
 
     print("🔍 Matched Champions:")
     for champ in matched:

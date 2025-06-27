@@ -6,6 +6,7 @@ from ocr.detect_shop import wait_for_shop, shop_still_visible
 from ocr.shop_monitor import monitor_shop_loop_once
 from ocr.matching import load_champ
 from scraper import scrape_to_json
+from engine.api_engine import capture_bench
 
 DATA_DIR = "data"
 CHAMPS_PATH = os.path.join(DATA_DIR, "champions.json")
@@ -49,11 +50,13 @@ def main():
         return
 
     champions = load_champ(champs_path)
+    
 
     while True:
         if wait_for_shop():
             print("Shop detected, entering monitor loop...")
             while shop_still_visible():
+                capture_bench()
                 monitor_shop_loop_once(champions)
 
 if __name__ == "__main__":
