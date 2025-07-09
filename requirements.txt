@@ -41,3 +41,6 @@ tzdata==2025.2
 urllib3==2.4.0
 websocket-client==1.8.0
 wsproto==1.2.0
+SpeechRecognition>=3.8.1
+pyttsx3>=2.90
+PyAudio>=0.2.11
