@@ -1,48 +1,53 @@
-import speech_recognition as sr
-from rules_engine import process_voice_query
-from pynput import keyboard
+# rules_engine.py
+import json
+import re
+from tts_utils import speak
 
-# Initialize recognizer and microphone once
-en = sr.Recognizer()
-mic = sr.Microphone()
+# Load comp definitions once at import time
+with open("data/comps_output.json") as f:
+    COMPS = json.load(f)
 
-
-def recognize_once():
+def process_voice_query(query: str, gold: int = 0) -> str:
     """
-    Listen for a single voice command and process it.
+    Master entrypoint: handles reroll/level/gold queries AND inventory queries.
     """
-    with mic as source:
-        en.adjust_for_ambient_noise(source)
-        print("Listening... Speak your command.")
-        audio = en.listen(source)
-    try:
-        query = en.recognize_google(audio).lower()
-        print(f"Heard: {query}")
-        response = process_voice_query(query)
-        print(f"Assistant: {response}")
-    except sr.UnknownValueError:
-        print("Could not understand audio.")
-    except sr.RequestError as e:
-        print(f"Recognition error: {e}")
+    # inventory query: pattern "i have X and Y and Z what should i sell"
+    m = re.search(r"i have (.+?) what should i sell", query)
+    if m:
+        raw = m.group(1)
+        # split on commas or 'and'
+        champs = re.split(r",\s*|\s+and\s+", raw)
+        champs = [c.strip().title() for c in champs if c.strip()]
+        return handle_inventory_query(champs, gold)
 
+    # ... your existing reroll/level/gold logic here ...
+    # (unchanged)
+    return "Sorry, I can only advise on rerolling, leveling, or managing gold. "\
+           "Try asking 'should I reroll?', 'when to level up?', or 'how much gold to save?'."
 
-def on_activate():
-    """Callback for hotkey press to trigger listening."""
-    print("Hotkey pressed, activating voice assistant...")
-    recognize_once()
+def handle_inventory_query(champs: list[str], gold: int) -> str:
+    """
+    Given a list of champions and your gold, returns which ones to sell.
+    """
+    # Find all champions used by any comp that you *could* be building
+    usable = set()
+    for comp in COMPS:
+        # if comp shares at least one of your champs, assume you're aiming for it
+        if any(c in comp["champions"] for c in champs):
+            usable.update(comp["champions"])
 
-
-def for_canonical(f):
-    return lambda k: f(l.canonical(k))
-
-
-if __name__ == "__main__":
-    print("TFT Voice Assistant ready. Press CTRL+SHIFT+S to issue a command. Press ESC to exit.")
-    # Map hotkeys
-    hotkeys = {
-        '<ctrl>+<shift>+s': on_activate,
-        '<esc>': lambda: exit(0)
-    }
-    # Start listening for hotkeys
-    with keyboard.GlobalHotKeys(hotkeys) as h:
-        h.join()
+    # sell any champ you don't need
+    to_sell = [c for c in champs if c not in usable]
+    if not to_sell:
+        resp = "All of those can fit into at least one common comp—keep them for now."
+    else:
+        resp = f"Sell: {', '.join(to_sell)}. " \
+               f"Keep the others for potential comp synergies."
+    # Optionally mention gold-interest:
+    if gold < 50:
+        resp += " You have less than 50 gold—avoid spending below 50 to maximize interest."
+    else:
+        resp += " Good job saving at least 50 gold for interest."
+    # speak and return
+    speak(resp)
+    return resp
