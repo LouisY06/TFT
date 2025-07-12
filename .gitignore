@@ -21,4 +21,4 @@ ocr/assets/screenshots/
 *.html
 
 # JSON files
-*.json
+*.json.env
