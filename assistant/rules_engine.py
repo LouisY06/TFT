@@ -1,18 +1,25 @@
 import os
 import json
-import re
-from dotenv import load_dotenv
 import requests
+from dotenv import load_dotenv
+from assistant.tts_utils import speak
 
-load_dotenv() 
+# Load your .env file to pull in GEMINI_API_KEY
+load_dotenv()
 
-GEMINI_KEY = os.getenv("GEMINI_API_KEY")
-if not GEMINI_KEY:
+#–– your data files
+DATA_DIR        = os.path.join(os.path.dirname(__file__), "..", "data")
+CHAMPS_PATH     = os.path.join(DATA_DIR, "champions.json")
+COMPS_PATH      = os.path.join(DATA_DIR, "comps_output.json")
+
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+if not GEMINI_API_KEY:
     raise RuntimeError("Missing GEMINI_API_KEY in environment")
 
-CHAMPS_PATH = "data/champions.json"
-COMPS_PATH = "data/comps_output.json"
-
+GEMINI_URL = (
+    "https://generativelanguage.googleapis.com/"
+    "v1beta/models/gemini-2.0-flash:generateContent"
+)
 
 def _load_data():
     with open(CHAMPS_PATH, encoding="utf-8") as f:
@@ -21,68 +28,64 @@ def _load_data():
         comps = json.load(f)
     return champs, comps
 
-
 def _ask_gemini(prompt: str) -> str:
-    url = (
-        "https://generativelanguage.googleapis.com"
-        f"/v1beta/models/gemini-2.0-flash:generateContent?key={GEMINI_KEY}"
-    )
     payload = {
-        "prompt": {"text": prompt},
-        "temperature": 0.2,
-        "candidateCount": 1,
+        "contents": [
+            {
+                "parts": [
+                    {"text": prompt}
+                ]
+            }
+        ]
     }
-    resp = requests.post(url, json=payload)
+    resp = requests.post(
+        f"{GEMINI_URL}?key={GEMINI_API_KEY}",
+        json=payload,
+        headers={"Content-Type": "application/json"}
+    )
     resp.raise_for_status()
     data = resp.json()
-
-    # Debug: print entire response so you can inspect its structure
-    print("=== raw Gemini response ===")
-    print(json.dumps(data, indent=2))
-    print("===========================")
-
-    # Try a few common fields:
-    # 1) top-level "candidates"
-    if "candidates" in data:
-        candidates = data["candidates"]
-    # 2) top-level "choices"
-    elif "choices" in data:
-        candidates = data["choices"]
-    # 3) older schema under "output": {"choices": [...]}
-    elif data.get("output", {}).get("choices"):
-        candidates = data["output"]["choices"]
-    else:
-        raise RuntimeError("Unexpected Gemini response format (no candidates/choices)")
-
-    if not candidates:
-        return "Gemini returned no candidates."
-
-    first = candidates[0]
-
-    # Most likely path: first["content"]["text"]
-    if isinstance(first.get("content"), dict) and "text" in first["content"]:
-        return first["content"]["text"]
-
-    # Some schemas put the text at first["text"]
-    if "text" in first:
-        return first["text"]
-
-    # Or nested under message.content
-    if first.get("message", {}).get("content"):
-        return first["message"]["content"]
-
-    raise RuntimeError("Unexpected Gemini response format (missing text field)")
-
+    try:
+        content = data["candidates"][0]["content"]
+        # if Gemini gives us a dict, pull out the text
+        if isinstance(content, dict):
+            if "text" in content:
+                text = content["text"]
+            elif "parts" in content:
+                text = "".join(p.get("text", "") for p in content["parts"])
+            else:
+                text = json.dumps(content)
+        else:
+            text = content
+        return text.strip()
+    except (KeyError, IndexError):
+        raise RuntimeError(f"Unexpected Gemini response format: {data}")
 
 def process_voice_query(query: str) -> str:
+    """
+    For any question, hand off to Gemini with your JSON data as context.
+    """
     champs, comps = _load_data()
 
-    # build a dynamic prompt; you can expand this as you add new question types
-    prompt = (
-        "You are a Teamfight Tactics assistant.  "
-        f"The player asked: “{query}”.  "
-        "You have access to the champion data (champions.json) and comp data (comps_output.json).  "
-        "Answer succinctly, pulling from the JSON where needed."
+    system_ctx = (
+        "You are a Teamfight Tactics assistant. "
+        "You know the current bench champions and gold levels from JSON, "
+        "and the list of comps with their units. "
+        "Answer any question dynamically based on that data, "
+        "and be concise."
     )
 
-    return _ask_gemini(prompt)
+    context = {
+        "bench_data": champs,
+        "comps": comps
+    }
+
+    prompt = (
+        f"{system_ctx}\n\n"
+        f"DATA CONTEXT (JSON):\n{json.dumps(context)}\n\n"
+        f"USER QUESTION:\n{query}"
+    )
+
+    answer = _ask_gemini(prompt)
+    speak(answer)
+    return answer
