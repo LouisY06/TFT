@@ -3,7 +3,7 @@ from pathlib import Path
 from bs4 import BeautifulSoup
 import json
 
-# === Data Classes ===
+
 class ChampData:
     def __init__(self, name, cost, traits):
         self.name = name
@@ -28,7 +28,6 @@ class TraitData:
             "breaks": self.breaks
         }
 
-# === Utility Functions ===
 def extract_traits(section):
     traits = []
     if section:
@@ -67,7 +66,6 @@ def parse_page(html):
     traits = extract_traits(origins) + extract_traits(classes)
     return champs, traits
 
-# === Main Scrape Function ===
 def scrape_to_json(output_dir="data"):
     url = "https://www.mobafire.com/teamfight-tactics/champions"
     print(f"🌐 Scraping {url} ...")
@@ -76,7 +74,7 @@ def scrape_to_json(output_dir="data"):
         r = requests.get(url)
         r.raise_for_status()
     except requests.RequestException as e:
-        print(f"❌ Failed to fetch data: {e}")
+        print(f"Failed to fetch data: {e}")
         return None, None
 
     champs, traits = parse_page(r.text)
@@ -92,6 +90,6 @@ def scrape_to_json(output_dir="data"):
     with open(traits_file, "w") as tf:
         json.dump([t.asdict() for t in sorted(traits, key=lambda t: t.name)], tf, indent=4)
 
-    print(f"✅ Champions saved to: {champs_file}")
-    print(f"✅ Traits saved to: {traits_file}")
+    print(f"Champions saved to: {champs_file}")
+    print(f"Traits saved to: {traits_file}")
     return str(champs_file), str(traits_file)

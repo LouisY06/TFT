@@ -1,0 +1,204 @@
+[
+    {
+        "name": "a-m-p",
+        "breaks": [
+            2,
+            3,
+            4,
+            5
+        ]
+    },
+    {
+        "name": "anima-squad",
+        "breaks": [
+            3,
+            5,
+            7,
+            1
+        ]
+    },
+    {
+        "name": "bastion",
+        "breaks": [
+            2,
+            4,
+            6
+        ]
+    },
+    {
+        "name": "boombots",
+        "breaks": [
+            2,
+            4,
+            6
+        ]
+    },
+    {
+        "name": "bruiser",
+        "breaks": [
+            2,
+            4,
+            6
+        ]
+    },
+    {
+        "name": "cyberboss",
+        "breaks": [
+            2,
+            3,
+            4
+        ]
+    },
+    {
+        "name": "cypher",
+        "breaks": [
+            3,
+            4,
+            5,
+            6
+        ]
+    },
+    {
+        "name": "divinicorp",
+        "breaks": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            7
+        ]
+    },
+    {
+        "name": "dynamo",
+        "breaks": [
+            2,
+            3,
+            4
+        ]
+    },
+    {
+        "name": "executioner",
+        "breaks": [
+            2,
+            3,
+            4,
+            5
+        ]
+    },
+    {
+        "name": "exotech",
+        "breaks": [
+            3,
+            5,
+            7,
+            1
+        ]
+    },
+    {
+        "name": "god-of-the-net",
+        "breaks": [
+            1
+        ]
+    },
+    {
+        "name": "golden-ox",
+        "breaks": [
+            2,
+            4,
+            6
+        ]
+    },
+    {
+        "name": "marksman",
+        "breaks": [
+            2,
+            4
+        ]
+    },
+    {
+        "name": "nitro",
+        "breaks": [
+            3,
+            4
+        ]
+    },
+    {
+        "name": "overlord",
+        "breaks": [
+            1
+        ]
+    },
+    {
+        "name": "rapidfire",
+        "breaks": [
+            2,
+            4,
+            6
+        ]
+    },
+    {
+        "name": "slayer",
+        "breaks": [
+            2,
+            4,
+            5
+        ]
+    },
+    {
+        "name": "soul-killer",
+        "breaks": [
+            1
+        ]
+    },
+    {
+        "name": "strategist",
+        "breaks": [
+            2,
+            3,
+            4,
+            5
+        ]
+    },
+    {
+        "name": "street-demon",
+        "breaks": [
+            3,
+            5,
+            7,
+            1
+        ]
+    },
+    {
+        "name": "syndicate",
+        "breaks": [
+            3,
+            5,
+            7
+        ]
+    },
+    {
+        "name": "techie",
+        "breaks": [
+            2,
+            4,
+            6,
+            8
+        ]
+    },
+    {
+        "name": "vanguard",
+        "breaks": [
+            2,
+            4,
+            6
+        ]
+    },
+    {
+        "name": "virus",
+        "breaks": [
+            1
+        ]
+    }
+]

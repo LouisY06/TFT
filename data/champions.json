@@ -1,0 +1,489 @@
+[
+    {
+        "name": "Alistar",
+        "cost": 1,
+        "traits": [
+            "golden-ox",
+            "bruiser"
+        ]
+    },
+    {
+        "name": "Annie",
+        "cost": 4,
+        "traits": [
+            "golden-ox",
+            "a-m-p"
+        ]
+    },
+    {
+        "name": "Aphelios",
+        "cost": 4,
+        "traits": [
+            "golden-ox",
+            "marksman"
+        ]
+    },
+    {
+        "name": "Aurora",
+        "cost": 5,
+        "traits": [
+            "anima-squad",
+            "dynamo"
+        ]
+    },
+    {
+        "name": "Brand",
+        "cost": 4,
+        "traits": [
+            "street-demon",
+            "techie"
+        ]
+    },
+    {
+        "name": "Braum",
+        "cost": 3,
+        "traits": [
+            "syndicate",
+            "vanguard"
+        ]
+    },
+    {
+        "name": "Cho'Gath",
+        "cost": 4,
+        "traits": [
+            "boombots",
+            "bruiser"
+        ]
+    },
+    {
+        "name": "Darius",
+        "cost": 2,
+        "traits": [
+            "syndicate",
+            "bruiser"
+        ]
+    },
+    {
+        "name": "Dr. Mundo",
+        "cost": 1,
+        "traits": [
+            "street-demon",
+            "bruiser",
+            "slayer"
+        ]
+    },
+    {
+        "name": "Draven",
+        "cost": 3,
+        "traits": [
+            "cypher",
+            "rapidfire"
+        ]
+    },
+    {
+        "name": "Ekko",
+        "cost": 2,
+        "traits": [
+            "street-demon",
+            "strategist"
+        ]
+    },
+    {
+        "name": "Elise",
+        "cost": 3,
+        "traits": [
+            "nitro",
+            "dynamo"
+        ]
+    },
+    {
+        "name": "Fiddlesticks",
+        "cost": 3,
+        "traits": [
+            "boombots",
+            "techie"
+        ]
+    },
+    {
+        "name": "Galio",
+        "cost": 3,
+        "traits": [
+            "cypher",
+            "bastion"
+        ]
+    },
+    {
+        "name": "Garen",
+        "cost": 5,
+        "traits": [
+            "god-of-the-net"
+        ]
+    },
+    {
+        "name": "Gragas",
+        "cost": 3,
+        "traits": [
+            "divinicorp",
+            "bruiser"
+        ]
+    },
+    {
+        "name": "Graves",
+        "cost": 2,
+        "traits": [
+            "golden-ox",
+            "executioner"
+        ]
+    },
+    {
+        "name": "Illaoi",
+        "cost": 2,
+        "traits": [
+            "anima-squad",
+            "bastion"
+        ]
+    },
+    {
+        "name": "Jarvan IV",
+        "cost": 3,
+        "traits": [
+            "golden-ox",
+            "slayer",
+            "vanguard"
+        ]
+    },
+    {
+        "name": "Jax",
+        "cost": 1,
+        "traits": [
+            "exotech",
+            "bastion"
+        ]
+    },
+    {
+        "name": "Jhin",
+        "cost": 2,
+        "traits": [
+            "exotech",
+            "dynamo",
+            "marksman"
+        ]
+    },
+    {
+        "name": "Jinx",
+        "cost": 3,
+        "traits": [
+            "street-demon",
+            "marksman"
+        ]
+    },
+    {
+        "name": "Kindred",
+        "cost": 1,
+        "traits": [
+            "nitro",
+            "marksman",
+            "rapidfire"
+        ]
+    },
+    {
+        "name": "Kobuko",
+        "cost": 5,
+        "traits": [
+            "cyberboss",
+            "bruiser"
+        ]
+    },
+    {
+        "name": "Kog'Maw",
+        "cost": 1,
+        "traits": [
+            "boombots",
+            "rapidfire"
+        ]
+    },
+    {
+        "name": "LeBlanc",
+        "cost": 2,
+        "traits": [
+            "cypher",
+            "strategist"
+        ]
+    },
+    {
+        "name": "Leona",
+        "cost": 4,
+        "traits": [
+            "anima-squad",
+            "vanguard"
+        ]
+    },
+    {
+        "name": "Miss Fortune",
+        "cost": 4,
+        "traits": [
+            "syndicate",
+            "dynamo"
+        ]
+    },
+    {
+        "name": "Mordekaiser",
+        "cost": 3,
+        "traits": [
+            "exotech",
+            "bruiser",
+            "techie"
+        ]
+    },
+    {
+        "name": "Morgana",
+        "cost": 1,
+        "traits": [
+            "divinicorp",
+            "dynamo"
+        ]
+    },
+    {
+        "name": "Naafiri",
+        "cost": 2,
+        "traits": [
+            "exotech",
+            "a-m-p"
+        ]
+    },
+    {
+        "name": "Neeko",
+        "cost": 4,
+        "traits": [
+            "street-demon",
+            "strategist"
+        ]
+    },
+    {
+        "name": "Nidalee",
+        "cost": 1,
+        "traits": [
+            "nitro",
+            "a-m-p"
+        ]
+    },
+    {
+        "name": "Poppy",
+        "cost": 1,
+        "traits": [
+            "cyberboss",
+            "bastion"
+        ]
+    },
+    {
+        "name": "Renekton",
+        "cost": 5,
+        "traits": [
+            "divinicorp",
+            "overlord",
+            "bastion"
+        ]
+    },
+    {
+        "name": "Rengar",
+        "cost": 3,
+        "traits": [
+            "street-demon",
+            "executioner"
+        ]
+    },
+    {
+        "name": "Rhaast",
+        "cost": 2,
+        "traits": [
+            "divinicorp",
+            "vanguard"
+        ]
+    },
+    {
+        "name": "Samira",
+        "cost": 5,
+        "traits": [
+            "street-demon",
+            "a-m-p"
+        ]
+    },
+    {
+        "name": "Sejuani",
+        "cost": 4,
+        "traits": [
+            "exotech",
+            "bastion"
+        ]
+    },
+    {
+        "name": "Senna",
+        "cost": 3,
+        "traits": [
+            "divinicorp",
+            "slayer"
+        ]
+    },
+    {
+        "name": "Seraphine",
+        "cost": 1,
+        "traits": [
+            "anima-squad",
+            "techie"
+        ]
+    },
+    {
+        "name": "Shaco",
+        "cost": 1,
+        "traits": [
+            "syndicate",
+            "slayer"
+        ]
+    },
+    {
+        "name": "Shyvana",
+        "cost": 2,
+        "traits": [
+            "nitro",
+            "bastion",
+            "techie"
+        ]
+    },
+    {
+        "name": "Skarner",
+        "cost": 2,
+        "traits": [
+            "boombots",
+            "vanguard"
+        ]
+    },
+    {
+        "name": "Sylas",
+        "cost": 1,
+        "traits": [
+            "anima-squad",
+            "vanguard"
+        ]
+    },
+    {
+        "name": "Twisted Fate",
+        "cost": 2,
+        "traits": [
+            "syndicate",
+            "rapidfire"
+        ]
+    },
+    {
+        "name": "Urgot",
+        "cost": 5,
+        "traits": [
+            "boombots",
+            "executioner"
+        ]
+    },
+    {
+        "name": "Varus",
+        "cost": 3,
+        "traits": [
+            "exotech",
+            "executioner"
+        ]
+    },
+    {
+        "name": "Vayne",
+        "cost": 2,
+        "traits": [
+            "anima-squad",
+            "slayer"
+        ]
+    },
+    {
+        "name": "Veigar",
+        "cost": 2,
+        "traits": [
+            "cyberboss",
+            "techie"
+        ]
+    },
+    {
+        "name": "Vex",
+        "cost": 4,
+        "traits": [
+            "divinicorp",
+            "executioner"
+        ]
+    },
+    {
+        "name": "Vi",
+        "cost": 1,
+        "traits": [
+            "cypher",
+            "vanguard"
+        ]
+    },
+    {
+        "name": "Viego",
+        "cost": 5,
+        "traits": [
+            "golden-ox",
+            "soul-killer",
+            "techie"
+        ]
+    },
+    {
+        "name": "Xayah",
+        "cost": 4,
+        "traits": [
+            "anima-squad",
+            "marksman"
+        ]
+    },
+    {
+        "name": "Yuumi",
+        "cost": 3,
+        "traits": [
+            "anima-squad",
+            "a-m-p",
+            "strategist"
+        ]
+    },
+    {
+        "name": "Zac",
+        "cost": 5,
+        "traits": [
+            "virus"
+        ]
+    },
+    {
+        "name": "Zed",
+        "cost": 4,
+        "traits": [
+            "cypher",
+            "slayer"
+        ]
+    },
+    {
+        "name": "Zeri",
+        "cost": 4,
+        "traits": [
+            "exotech",
+            "rapidfire"
+        ]
+    },
+    {
+        "name": "Ziggs",
+        "cost": 4,
+        "traits": [
+            "cyberboss",
+            "strategist"
+        ]
+    },
+    {
+        "name": "Zyra",
+        "cost": 1,
+        "traits": [
+            "street-demon",
+            "techie"
+        ]
+    }
+]
