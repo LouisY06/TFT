@@ -68,7 +68,7 @@ def parse_page(html):
 
 def scrape_to_json(output_dir="data"):
     url = "https://www.mobafire.com/teamfight-tactics/champions"
-    print(f"🌐 Scraping {url} ...")
+    print(f"Scraping {url} ...")
 
     try:
         r = requests.get(url)
