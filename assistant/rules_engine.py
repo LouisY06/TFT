@@ -4,10 +4,9 @@ import requests
 from dotenv import load_dotenv
 from assistant.tts_utils import speak
 
-# Load your .env file to pull in GEMINI_API_KEY
 load_dotenv()
 
-#–– your data files
+#your data files
 DATA_DIR        = os.path.join(os.path.dirname(__file__), "..", "data")
 CHAMPS_PATH     = os.path.join(DATA_DIR, "champions.json")
 COMPS_PATH      = os.path.join(DATA_DIR, "comps_output.json")

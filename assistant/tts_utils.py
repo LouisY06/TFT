@@ -1,4 +1,3 @@
-# tts_utils.py
 import os, shlex
 
 def speak(text: str):

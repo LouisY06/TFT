@@ -25,7 +25,7 @@ def monitor_shop_loop_once(champions):
     print(f"Current Level: {level}")
 
 
-    print("🔍 Matched Champions:")
+    print("Matched Champions:")
     for champ in matched:
         if "error" in champ:
             print(f"{champ['name']}: {champ['error']}")
