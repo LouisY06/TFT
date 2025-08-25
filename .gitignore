@@ -9,16 +9,37 @@ __pycache__/
 
 # Virtual environments
 venv/
+env/
+
+# Environment files and secrets
+.env
+.env.*
+*.key
+*.secret
+config.ini
 
 # OS files
 .DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
 
 # Images & screenshots
-assets
+assets/
+screenshots/
 ocr/assets/screenshots/
+photo/
 
 # HTML files
 *.html
+comps_html/
 
-# JSON files
-*.json.env
+# Installation and setup files
+INSTALL.txt
+install.py
+setup.py
+
+# Tools directory (calibration tools not needed in repo)
+tools/

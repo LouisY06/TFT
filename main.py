@@ -18,6 +18,7 @@ from comps_html.html_to_json import parse_all_comps
 from engine.comp_scraper import scrape_mobafire_comps
 from assistant.rules_engine import process_voice_query
 from assistant.tts_utils import speak
+from vision.game_state_analyzer import get_game_analyzer
 
 # Setup logging
 logger = logging.getLogger(__name__)
@@ -99,6 +100,94 @@ def on_activate():
     speak("Yes?")
     recognize_once()
 
+def on_analyze_game():
+    """Analyze current game state using pure vision and provide feedback."""
+    logger.info("Game analysis hotkey activated")
+    speak("Analyzing your screen...")
+    
+    try:
+        start_time = time.time()
+        
+        # Get game analyzer and analyze current state using vision only
+        analyzer = get_game_analyzer()
+        vision_stats = analyzer.get_game_stats_only()
+        
+        analysis_time = time.time() - start_time
+        log_performance("vision_game_analysis", analysis_time)
+        
+        # Create strategic advice based on vision data
+        if vision_stats:
+            advice_parts = []
+            advice_parts.append("Based on your screen analysis:")
+            
+            # Report detected stats
+            if vision_stats.get('gold') is not None:
+                gold = vision_stats['gold']
+                advice_parts.append(f"You have {gold} gold.")
+                
+                # Gold-based advice
+                if gold >= 50:
+                    advice_parts.append("With 50+ gold, consider rolling for upgrades or key champions.")
+                elif gold >= 30:
+                    advice_parts.append("Good economy. Save for next level or roll if you need key units.")
+                else:
+                    advice_parts.append("Low gold. Focus on economy and avoid unnecessary rerolls.")
+            
+            if vision_stats.get('level') is not None:
+                level = vision_stats['level']
+                advice_parts.append(f"You are level {level}.")
+                
+                # Level-based advice
+                if level <= 6:
+                    advice_parts.append("Early game. Focus on economy and basic synergies.")
+                elif level <= 8:
+                    advice_parts.append("Mid game. Start rolling for key 4-cost champions.")
+                else:
+                    advice_parts.append("Late game. Look for 5-cost champions and perfect positioning.")
+            
+            if vision_stats.get('health') is not None:
+                health = vision_stats['health']
+                advice_parts.append(f"Your health is {health}.")
+                
+                # Health-based advice  
+                if health <= 20:
+                    advice_parts.append("Critical health! Prioritize immediate strength over economy.")
+                elif health <= 40:
+                    advice_parts.append("Low health. Balance economy with board strength.")
+                else:
+                    advice_parts.append("Healthy. You can afford to be greedy with economy.")
+            
+            if vision_stats.get('round_stage'):
+                round_stage = vision_stats['round_stage']
+                advice_parts.append(f"It's round {round_stage}.")
+                
+                # Round-based advice
+                if '1-' in round_stage or '2-' in round_stage:
+                    advice_parts.append("Early rounds. Focus on economy and basic synergies.")
+                elif '3-' in round_stage or '4-' in round_stage:
+                    advice_parts.append("Mid game transition. Start building your core composition.")
+                else:
+                    advice_parts.append("Late game. Focus on optimization and positioning.")
+            
+            # General advice
+            advice_parts.append("For detailed champion advice, use Ctrl+Shift+S and describe your board.")
+            
+            advice = " ".join(advice_parts)
+            logger.info(f"Vision-based analysis: {vision_stats}")
+            logger.info(f"Advice provided: {advice[:100]}...")
+            speak(advice)
+            
+        else:
+            error_msg = "Could not detect game information from screen. Make sure TFT is visible and try running the calibration tool."
+            logger.warning("No vision stats detected")
+            speak(error_msg)
+            
+    except Exception as e:
+        error_msg = f"Vision analysis error: {str(e)}"
+        logger.error(error_msg)
+        log_error_with_context(e, {"operation": "vision_game_analysis"})
+        speak("Screen analysis failed. Make sure TFT is visible and try the calibration tool.")
+
 # TFT shop monitor loop
 def shop_monitor(champions):
     """Monitor TFT shop and process champion data."""
@@ -175,10 +264,14 @@ def main():
 
         # 5) register hotkeys
         logger.info("Registering hotkeys...")
-        logger.info("Assistant ready; press Ctrl+Shift+S to ask, Esc to exit")
+        logger.info("Assistant ready:")
+        logger.info("  Ctrl+Shift+S: Ask question")
+        logger.info("  Ctrl+Shift+A: Analyze current game state")
+        logger.info("  Esc: Exit")
         
         with keyboard.GlobalHotKeys({
             '<ctrl>+<shift>+s': on_activate,
+            '<ctrl>+<shift>+a': on_analyze_game,
             '<esc>': lambda: sys.exit(0),
         }) as h:
             h.join()

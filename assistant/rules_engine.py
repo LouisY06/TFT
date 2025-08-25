@@ -5,6 +5,7 @@ from typing import Dict, Any, Tuple
 from dotenv import load_dotenv
 from assistant.tts_utils import speak
 from assistant.gemini_service import GeminiClient, GeminiAPIError
+from assistant.manual_input_handler import get_input_handler, parse_user_game_state
 
 load_dotenv()
 logger = logging.getLogger(__name__)
@@ -56,6 +57,48 @@ class TFTAssistant:
             "and be concise. Provide strategic advice about team composition, "
             "economy management, and positioning when relevant."
         )
+    
+    def _build_enhanced_system_context(self, has_manual_state: bool = False) -> str:
+        """Build enhanced system context when manual game state is available.
+        
+        Args:
+            has_manual_state: Whether manual game state information is available
+            
+        Returns:
+            Enhanced system context for AI analysis
+        """
+        base_context = self._build_system_context()
+        
+        if has_manual_state:
+            enhanced_context = (
+                f"{base_context}\n\n"
+                "CURRENT GAME STATE AVAILABLE:\n"
+                "The user has provided their current game state including champions on board, "
+                "bench, shop, gold, level, health, round, and target composition. "
+                "Numerical data (gold, level, health, round) may be enhanced with real-time "
+                "vision detection for accuracy. Use this information to provide highly specific "
+                "and actionable advice. Consider synergies, power spikes, economy decisions, and "
+                "positioning based on their exact situation.\n\n"
+                "ANALYSIS PRIORITIES:\n"
+                "1. Evaluate current board strength and synergies\n"
+                "2. Suggest optimal purchases from shop\n"
+                "3. Recommend positioning improvements\n"
+                "4. Advise on economy management (save vs spend)\n"
+                "5. Identify transition paths to stronger late-game compositions\n"
+                "6. Consider win/loss streak implications\n"
+                "7. Suggest items and champion upgrades"
+            )
+        else:
+            enhanced_context = (
+                f"{base_context}\n\n"
+                "No specific game state provided. Ask the user to describe their current situation "
+                "for more tailored advice. They can say things like:\n"
+                "- 'I have 50 gold, level 7, with Jinx and Vi on my board'\n"
+                "- 'My bench has Caitlyn, shop shows Jayce and Ekko'\n"
+                "- 'Round 4-2, trying to play Enforcers, need advice'"
+            )
+        
+        return enhanced_context
 
     def process_voice_query(self, query: str) -> str:
         """Process a voice query and return strategic advice.
@@ -82,18 +125,84 @@ class TFTAssistant:
         logger.info(f"Processing voice query: {query[:100]}...")
         
         try:
+            # First, try to parse manual game state from the query
+            input_handler = get_input_handler()
+            manual_state = parse_user_game_state(query)
+            
+            # Try to enhance with vision data for numerical values
+            vision_data = None
+            try:
+                from vision.game_state_analyzer import GameStateAnalyzer
+                vision_analyzer = GameStateAnalyzer()
+                vision_data = vision_analyzer.get_game_stats_only()
+                logger.info("Successfully retrieved vision data for game stats")
+            except Exception as vision_error:
+                logger.debug(f"Vision data not available: {vision_error}")
+            
+            # Merge manual and vision data
+            if manual_state and vision_data:
+                # Use vision data for numerical values if manual data is missing
+                if manual_state.gold is None and vision_data.get('gold') is not None:
+                    manual_state.gold = vision_data['gold']
+                if manual_state.level is None and vision_data.get('level') is not None:
+                    manual_state.level = vision_data['level']
+                if manual_state.health is None and vision_data.get('health') is not None:
+                    manual_state.health = vision_data['health']
+                if manual_state.round_stage is None and vision_data.get('round_stage'):
+                    manual_state.round_stage = vision_data['round_stage']
+                logger.info("Enhanced manual input with vision data")
+            elif vision_data and not manual_state:
+                # Create a basic state from vision data only
+                from assistant.manual_input_handler import GameStateInput
+                manual_state = GameStateInput()
+                manual_state.gold = vision_data.get('gold')
+                manual_state.level = vision_data.get('level')
+                manual_state.health = vision_data.get('health')
+                manual_state.round_stage = vision_data.get('round_stage')
+                logger.info("Created game state from vision data only")
+            
+            # Load champion and composition data
             champs, comps = self._load_data()
             
-            system_ctx = self._build_system_context()
+            # Build the prompt with available information
+            system_ctx = self._build_enhanced_system_context(manual_state is not None)
+            
             context = {
-                "bench_data": champs,
-                "comps": comps
+                "champions_database": champs,
+                "compositions_database": comps
             }
+            
+            # Add manual state information if available
+            if manual_state:
+                logger.info("Using manual game state input")
+                state_info = input_handler.get_champion_info_for_state(manual_state)
+                formatted_state = input_handler.format_state_for_ai(manual_state)
+                
+                context["current_game_state"] = {
+                    "parsed_input": formatted_state,
+                    "champion_details": state_info,
+                    "board_champions": manual_state.board_champions,
+                    "bench_champions": manual_state.bench_champions,
+                    "shop_champions": manual_state.shop_champions,
+                    "gold": manual_state.gold,
+                    "level": manual_state.level,
+                    "health": manual_state.health,
+                    "round": manual_state.round_stage,
+                    "target_comp": manual_state.target_comp
+                }
+            else:
+                logger.info("No manual game state detected, using general context")
 
             prompt = (
                 f"{system_ctx}\n\n"
-                f"DATA CONTEXT (JSON):\n{json.dumps(context, indent=2)}\n\n"
-                f"USER QUESTION:\n{query}"
+                f"DATA CONTEXT:\n{json.dumps(context, indent=2)}\n\n"
+                f"USER QUERY:\n{query}\n\n"
+                f"RESPONSE GUIDELINES:\n"
+                f"- Be specific and actionable\n"
+                f"- Consider economy, positioning, and win conditions\n"
+                f"- Keep response under 200 words for voice delivery\n"
+                f"- If game state is provided, give tailored advice\n"
+                f"- If no game state, ask for more specific information"
             )
 
             answer = self.gemini_client.generate_content(prompt)
