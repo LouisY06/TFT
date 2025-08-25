@@ -43,3 +43,6 @@ setup.py
 
 # Tools directory (calibration tools not needed in repo)
 tools/
+
+# Documentation (keep local only)
+FILE_DOCUMENTATION.md
